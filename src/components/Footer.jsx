@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Shop = () => {
+const Footer = () => {
   return (
     <>
       
@@ -8,4 +8,4 @@ const Shop = () => {
   )
 }
 
-export default Shop
+export default Footer
