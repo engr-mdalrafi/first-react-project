@@ -5,7 +5,7 @@ import ProductCard from '../UI/productCard'
 const PopularProducts = () => {
   return (
     <>
-      <section className='my-[100px] pb-4 bg-background'>
+      <section className='mt-[100px] pb-4 bg-background'>
         <div className="container">
             <div className=' flex flex-col items-center text-center'>
                 <h2 className='pt-[100px] text-3xl text-primary'>Popular Products</h2>

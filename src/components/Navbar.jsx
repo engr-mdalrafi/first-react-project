@@ -19,7 +19,7 @@ const Navbar = () => {
             <ul className='text-base font-medium text-secondary flex gap-10'>
               <li><Link to="/">Home</Link></li>
               <li><Link to="/shop">Shop</Link></li>
-              <li><Link to="/contact">Contact</Link></li>
+              <li><Link to="/">Contact</Link></li>
             </ul>
           </div>
           {/* Mobile Nav */}
@@ -27,7 +27,7 @@ const Navbar = () => {
             <ul className={`text-base font-medium text-secondary flex flex-col items-center transition ${show ? "translate-x-0" : "translate-x-full"}  gap-10 fixed top-2/12 right-0 w-[250px] h-screen pt-5 bg-[#f1f1f1]`}>
               <li><Link to="/">Home</Link></li>
               <li><Link to="/shop">Shop</Link></li>
-              <li><Link to="/contact">Contact</Link></li>
+              <li><Link to="/">Contact</Link></li>
             </ul>
           </div>
           <div className='flex gap-7 '>
