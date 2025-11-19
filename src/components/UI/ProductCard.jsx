@@ -1,17 +1,16 @@
 import React from 'react'
 import { Link } from 'react-router'
 
-const ProductCard = ({url, title, price, NewPrice, Del}) => {
+const ProductCard = ({data}) => {
   return (
     <>
-      <div className='relative cursor-pointer bg-[##EFEFEF]'>
-        <Link to="/productDetails"><img className='w-full' src={url} alt={url} /></Link>
-        <div className='absolute bottom-5 left-1/2 -translate-x-1/2'>
-            <p className='text-center text-nowrap'><Link to="/productDetails">{title}</Link></p>
+      <div className='relative cursor-pointer bg-[#FFFFFF]'>
+        <Link to="/productDetails"><img className='w-full' src={data?.thumbnail} alt={data?.title} /></Link>
+        <div >
+            <p className='text-center text-nowrap'><Link to="/productDetails">{data?.title}</Link></p>
             <div className='flex justify-center gap-2.5'>
-              <p className='text-center text-base text-product '>{price}</p>
-              <p className='text-center text-base text-product '> <del>{Del}</del></p>
-              <p className='text-center text-base text-bagde'>{NewPrice}</p>
+              <p className='text-center text-base text-product '> <del>{data?.price + 45}</del></p>
+              <p className='text-center text-base text-bagde'>{data?.price}</p>
             </div>
         </div>
       </div> 

@@ -1,8 +1,29 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router'
 import ProductCard from '../UI/productCard'
+import axios, { all } from 'axios'
+import Skeliton from '../UI/Skeliton'
 
 const PopularProducts = () => {
+  const [products, setProducts] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [categories, setCategories] = useState([
+    "all",
+    "furniture",
+    "fragrances",
+    "womens-bags",
+    "sports-accessories"
+  ])
+  const [selectedCategory, setSelectedCategory] = useState("")
+
+  useEffect(()=>{
+    axios.get(`https://dummyjson.com/products${selectedCategory && "/category/" + selectedCategory}?limit=10`).then((res)=>{
+      setProducts(res.data.products);
+      setLoading(false)
+    })},[selectedCategory])
+
+
+
   return (
     <>
       <section className='mt-[100px] pb-4 bg-background'>
@@ -14,26 +35,26 @@ const PopularProducts = () => {
 
             <div className='pb-16'>
                 <ul className='flex gap-10'>
-                    <li><Link to="/">All</Link></li>
-                    <li><Link to="/">Furnitures</Link></li>
-                    <li><Link to="/">Bags</Link></li>
-                    <li><Link to="/">Decoration</Link></li>
-                    <li><Link to="/">Accessories</Link></li>
+                  {
+                    categories.map((item)=>(
+                      <li key={item}><button onClick={()=>setSelectedCategory(item =="all" ? "" : item)} className={`${item == selectedCategory && "text-bagde"} capitalize cursor-pointer`}>{item}</button></li>
+                    ))
+                  }
                 </ul>
             </div>
 
-            <div className='grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-x-7 gap-y-[60px] '>
-                <ProductCard url={"/product-1.png"} title="Simple Black Clock" price="$16.00"/>
-                <ProductCard url={"/product-2.png"} title="Simple Black Clock" price="$16.00"/>
-                <ProductCard url={"/product-3.png"} title="Simple Black Clock" price="$16.00"/>
-                <ProductCard url={"/product-4.png"} title="Simple Black Clock" price="$16.00"/>
-                <ProductCard url={"/product-5.png"} title="Simple Black Clock" price="$16.00"/>
-                <ProductCard url={"/product-6.png"} title="Simple Black Clock" price="$16.00"/>
-                <ProductCard url={"/product-7.png"} title="Simple Black Clock" price="$16.00"/>
-                <ProductCard url={"/product-8.png"} title="Simple Black Clock" price="$16.00"/>
-                <ProductCard url={"/product-9.png"} title="Simple Black Clock" price="$16.00"/>
-                <ProductCard url={"/product-10.png"} title="Simple Black Clock" price="$16.00"/>
+          {
+            loading ? (
+              <Skeliton/>
+            ) :  (
+              <div className='grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-x-7 gap-y-[60px] '>
+              {products.map((item)=>(
+                  <ProductCard key={item.id} data={item}/>
+                ))}
             </div>
+            )
+            }
+
 
 
         </div>
