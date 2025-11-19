@@ -1,40 +1,70 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router'
 import ProductCard from '../UI/productCard'
 import Button from '../UI/Button'
+import axios from 'axios'
 
 const ProductItem = () => {
+    const [products, setProducts] = useState([])
+      const [loading, setLoading] = useState(true)
+      const [categories, setCategories] = useState([
+        "all",
+        "furniture",
+        "fragrances",
+        "womens-bags",
+        "sports-accessories"
+      ])
+      const [selectedCategory, setSelectedCategory] = useState("")
+      const [pagination, setPagination] = useState ({
+        total: 0,
+        skip: 0,
+        limit: 20,
+    })
+    
+      useEffect(()=>{
+        axios.get(`https://dummyjson.com/products${selectedCategory && "/category/" + selectedCategory}?limit=${pagination.limit}&skip=${pagination.skip}`).then((res)=>{
+          setProducts(res.data.products);
+          setPagination({
+            total: res.data.total,
+            skip:  res.data.skip,
+            limit: res.data.limit,
+          })
+          setLoading(false)
+        })},[selectedCategory, pagination.skip, pagination.limit])
+    
   return (
     <>
  <section className='my-[100px]  bg-background'>
     <div className="container">
         <div className='pt-32 pb-4'>
             
-            <div className='pb-16'>
+            <div className='pb-16 flex justify-between'>
                 <ul className='flex gap-10'>
-                    <li><Link to="/">All</Link></li>
-                    <li><Link to="/">Furnitures</Link></li>
-                    <li><Link to="/">Bags</Link></li>
-                    <li><Link to="/">Decoration</Link></li>
-                    <li><Link to="/">Accessories</Link></li>
+                  {
+                    categories.map((item)=>(
+                      <li key={item}><button onClick={()=>setSelectedCategory(item =="all" ? "" : item)} className={`${item == selectedCategory && "text-bagde"} capitalize cursor-pointer`}>{item}</button></li>
+                    ))
+                  }
                 </ul>
+                 
+            
+                <select className='text-primary outline-none  bg-white' onChange={(e)=>setPagination((prev)=> ({...prev, limit: e.target.value}))}>
+                    <option value="20">20</option>
+                    <option value="60">60</option>
+                    <option value="100">100</option>
+                </select>
             </div>
             <div className='grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-x-7 gap-y-[60px] '>
-                <ProductCard url={"/product-1.png"} title="Simple Black Clock" Del="$50.00"NewPrice="$16.00"/>
-                <ProductCard url={"/product-2.png"} title="Simple Black Clock" Del="$50.00"NewPrice="$16.00"/>
-                <ProductCard url={"/product-3.png"} title="Simple Black Clock" Del="$50.00"NewPrice="$16.00"/>
-                <ProductCard url={"/product-4.png"} title="Simple Black Clock" Del="$50.00"NewPrice="$16.00"/>
-                <ProductCard url={"/product-5.png"} title="Simple Black Clock" Del="$50.00"NewPrice="$16.00"/>
-                <ProductCard url={"/product-6.png"} title="Simple Black Clock" Del="$50.00"NewPrice="$16.00"/>
-                <ProductCard url={"/product-7.png"} title="Simple Black Clock" Del="$50.00"NewPrice="$16.00"/>
-                <ProductCard url={"/product-8.png"} title="Simple Black Clock" Del="$50.00"NewPrice="$16.00"/>
-                <ProductCard url={"/product-9.png"} title="Simple Black Clock" Del="$50.00"NewPrice="$16.00"/>
-                <ProductCard url={"/product-10.png"} title="Simple Black Clock" Del="$50.00"NewPrice="$16.00"/>
+                {
+                    products.map((item)=>(
+                        <ProductCard key={item.id} data={item}/>
+
+                    ))
+                }
             </div>
-            <div className='mt-14 w-full flex justify-center items-center'>
-                <div className='py-3 px-11 w-fit border'>
-                    <Button title={"LOAD MORE"}/>
-                </div>
+            <div className='mt-14 w-full flex justify-center items-center gap-3'>
+                <button onClick={()=>setPagination((prev)=>({...prev, skip: pagination.skip - 2}))} className='px-3 py-1.5 border rounded-[6px] cursor-pointer'>Pre</button>
+                <button onClick={()=>setPagination((prev)=>({...prev, skip: pagination.skip + 2}))} className='px-3 py-1.5 border rounded-[6px] cursor-pointer'>Next</button>
             </div>
         </div>
 
