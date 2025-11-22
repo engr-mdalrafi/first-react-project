@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Banner from './UI/Banner'
 import ImageGallery from "react-image-gallery";
 import "react-image-gallery/styles/css/image-gallery.css";
@@ -8,31 +8,26 @@ import { CiHeart } from 'react-icons/ci';
 import { MdOutlineEmail } from 'react-icons/md';
 import { TiSocialInstagram } from 'react-icons/ti';
 import { RiFacebookFill } from 'react-icons/ri';
+import axios from 'axios';
+import { useParams } from 'react-router';
 
 const ProductDetails = () => {
-
-    const images = [
-  {
-    original: "/product-1.png",
-    thumbnail: "/product-1.png",
-  },
-  {
-    original: "/product-2.png",
-    thumbnail: "/product-2.png",
-  },
-  {
-    original: "/product-3.png",
-    thumbnail: "/product-3.png",
-  },
- 
-];
-
+    const [productData, setProductData] = useState({})
+    const [images, setImages] = useState([])
+    const params = useParams()
+    useEffect(()=>{
+        axios.get(`https://dummyjson.com/products/${params.id}`).then((res)=>{
+            setProductData(res.data)
+            const imgData = res.data.images.map((items)=>{
+                return{
+                    original:items,
+                    thumbnail:items,
+                } 
+            })
+            setImages(imgData)
+        })
+    },[])
 let [up, setUp] = useState(1)
-
-
-
-
-
   return (
     <>
       <Banner title="Product Details" path="Home"/>
@@ -44,31 +39,26 @@ let [up, setUp] = useState(1)
                 <ImageGallery items={images} thumbnailPosition="left" showPlayButton={false} showFullscreenButton={false}/>
                 </div>
                 <div className='w-[540px]'>
-                    <h2 className='text-3xl font-medium'>Black Clock</h2>
+                    <h2 className='text-3xl font-medium'>{productData.title}</h2>
                     <p className='flex gap-2 text-amber-400'> 
                         <FaRegStar />
                         <FaRegStar />
                         <FaRegStar />
                         <FaRegStar />
                         <FaRegStar />
-                        <p className='text-primary'>(Based on 0 Ratings)</p>
+                        <p className='text-primary'>{(productData.rating)}</p>
                     </p>
                     <p className='pt-6 pb-10 text-secondary'>
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit, sed do eiusmod temf
-                        incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, nostr
-                        exercitation ullamco laboris nisi ut aliquip ex ea.
+                        {productData.description}
                     </p>
                     <div className='flex gap-3.5 pb-4'>
-                        <h2 className='text-xl text-secondary'><del>$15.00</del></h2>
-                        <h2 className='text-3xl text-bagde'>$10.00</h2>
+                        <h2 className='text-xl text-secondary'><del>{productData.price + 50}</del></h2>
+                        <h2 className='text-3xl text-bagde'>{productData.price}</h2>
                     </div>
-                    <div>
-                        <h2 className='pb-3'>Choose Colour</h2>
-                        <div className='flex gap-3 pb-7'>
-                            <div className='h-5 w-5 rounded-full bg-red-500'></div>
-                            <div className='h-5 w-5 rounded-full bg-blue-500'></div>
-                            <div className='h-5 w-5 rounded-full bg-pink-500'></div>
-                            <div className='h-5 w-5 rounded-full bg-amber-500'></div>
+                    <div className='flex gap-2.5'> 
+                        <h2 className='pb-3'>Stock</h2>
+                        <div>
+                            {productData?.stock}
                         </div>
                     </div>
                     <div>
